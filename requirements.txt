@@ -1,0 +1,10 @@
+asgiref==3.6.0
+certifi==2022.12.7
+distlib==0.3.6
+filelock==3.10.4
+pipenv==2023.3.20
+platformdirs==3.1.1
+sqlparse==0.4.3
+tzdata==2023.2
+virtualenv==20.21.0
+virtualenv-clone==0.5.7
