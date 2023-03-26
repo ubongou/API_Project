@@ -7,13 +7,14 @@ from .models import Category, MenuItem, Cart, Order, OrderItem
 from .serializers import CategorySerializer, MenuItemSerializer, CartSerializer, OrderSerializer, OrderItemSerializer
 from django.core.paginator import Paginator, EmptyPage
 from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
-from rest_framework.permissions import isAdminUser
+# from rest_framework.permissions import isAdminUser
 
 # Create your views here.
-@api_view()
-class CategoriesView(generics.ListCreateAPIView):
+#@api_view()
+class CategoryView(generics.ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+  
 
 class MenuItemView(generics.ListCreateAPIView):
     queryset = MenuItem.objects.all()
@@ -22,7 +23,15 @@ class MenuItemView(generics.ListCreateAPIView):
     filterset_fields = ['price', 'inventory']
     search_fields = ['title']
 
+@api_view
+def single_item(request,id):
+    item=MenuItem.objects.all()
+    serialized_item = MenuItemSerializer(item, many=True)
+    return Response(serialized_item.data)
+
 class CartView(generics.ListCreateAPIView):
+    # items = MenuItem.objects.select_related('category').all
+    # print(items,"---")
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
     ordering_fields = ['price', 'inventory']

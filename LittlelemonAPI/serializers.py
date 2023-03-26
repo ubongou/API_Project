@@ -1,20 +1,27 @@
 from rest_framework import serializers
 from .models import Category, MenuItem, Cart, Order, OrderItem
 
-class MenuItemSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = MenuItem
-        fields = ['title','price','featured','category']
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
+        fields = '__all__'
+
+class MenuItemSerializer(serializers.ModelSerializer):
+    # category = CategorySerializer()
+    price = 5
+    class Meta:
+        model = MenuItem
         fields = ['title','price','featured','category']
 
+
 class CartSerializer(serializers.ModelSerializer):
+    # price=MenuItem
+    #unitprices = MenuItemSerializer('price')
     class Meta:
         model = Cart
-        fields = ['title','price','featured','category']
+        fields = ['user','quantity','menuit'] 
+       
 
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
