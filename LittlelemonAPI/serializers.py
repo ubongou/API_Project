@@ -20,7 +20,7 @@ class CartSerializer(serializers.ModelSerializer):
     #unitprices = MenuItemSerializer('price')
     class Meta:
         model = Cart
-        fields = ['user','quantity','menuit'] 
+        fields = ['user','quantity','menuitem'] 
        
 
 class OrderSerializer(serializers.ModelSerializer):
