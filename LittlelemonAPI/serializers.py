@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from .models import Category, MenuItem, Cart, Order, OrderItem
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from django.contrib.auth.models import User, Group
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -8,29 +10,27 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class MenuItemSerializer(serializers.ModelSerializer):
-    # category = CategorySerializer()
-    price = 5
     class Meta:
-        model = MenuItem
-        fields = ['title','price','featured','category']
-
+        model=MenuItem
+        fields =['title','price','featured','category']
 
 class CartSerializer(serializers.ModelSerializer):
-    # price=MenuItem
-    #unitprices = MenuItemSerializer('price')
     class Meta:
         model = Cart
-        fields = ['user','quantity','menuitem'] 
+        fields = ['user','menuitem','quantity','unit_price','price'] 
+        read_only_fields = ['user','unit_price','price']
+
        
 
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = ['title','price','featured','category']
+        fields = ['user','delivery_crew','status','total','date']
+        read_only_fields = ['user','total','date']
 
 class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderItem
-        fields = ['title','price','featured','category']
+        fields = '__all__'
 
     

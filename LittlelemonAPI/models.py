@@ -22,22 +22,21 @@ class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     menuitem = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
     quantity = models.SmallIntegerField()
-    #unit_price=single_item(menuitem)
-    #unit_price = models.DecimalField(max_digits=6, decimal_places=2)
-    #price = models.DecimalField(max_digits=6, decimal_places=2)
+    unit_price = models.DecimalField(max_digits=6, decimal_places=2)
+    price = models.DecimalField(max_digits=6, decimal_places=2)
 
-    class Meta:
-        unique_together = ('menuitem','user')
-
-    # def __str__(self) -> str:
-    #     return self.price
+    def save(self,*args,**kwargs):
+        self.unit_price = self.menuitem.price
+        self.price = self.quantity * self.unit_price
+        super(Cart,self).save(*args,**kwargs)
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     delivery_crew = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='delivery_crew', null=True)
     status = models.BooleanField(db_index=True, default=0)
-    total = models.DecimalField(max_digits=6, decimal_places=2)
-    date = models.DateField(db_index=True)
+    total = models.DecimalField(max_digits=6, decimal_places=2, default=0)
+    date = models.DateField(auto_now_add=True)
+    
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
@@ -45,6 +44,12 @@ class OrderItem(models.Model):
     quantity = models.SmallIntegerField()
     unit_price = models.DecimalField(max_digits=6, decimal_places=2)
     price = models.DecimalField(max_digits=6, decimal_places=2)
+
+    # def save(self,request,*args,**kwargs):
+    #     cart_items = Cart.objects.filter(user=request.user)
+    #     for cart_item in cart_items:
+    #         self.order.total+=self.price
+    #     super(Order,self).save(*args,**kwargs)
 
     class Meta:
         unique_together = ('order', 'menuitem')
